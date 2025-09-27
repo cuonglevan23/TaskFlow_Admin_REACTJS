@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:docker": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "format:check": "prettier --check .",
@@ -67,7 +68,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/axios": "^0.9.36",
     "@types/node": "^20.12.7",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",

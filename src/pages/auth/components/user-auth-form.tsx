@@ -17,6 +17,8 @@ import { Button } from '@/components/custom/button'
 import { PasswordInput } from '@/components/custom/password-input'
 import { cn } from '@/lib/utils'
 import { toast } from '@/components/ui/use-toast'
+import { useAuth } from '@/contexts/auth-context'
+import { loginWithEmail, handleAuthError } from '@/api/authApi'
 
 interface UserAuthFormProps extends HTMLAttributes<HTMLDivElement> { }
 
@@ -35,16 +37,11 @@ const formSchema = z.object({
     }),
 })
 
-// Sample user accounts for testing
-const sampleUsers = [
-  { id: '1', email: 'admin@gmail.com', password: 'admin@gmail.com', role: 'admin' },
-  { id: '2', email: 'staff@gmail.com', password: 'staff@gmail.com', role: 'staff' },
-  { id: '3', email: 'root@gmail.com', password: 'root@gmail.com', role: 'root' },
-]
-
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
+  const { checkAuth } = useAuth()
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,26 +52,35 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
 
   async function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true)
-    console.log('Submitting form...', data)
+    console.log('🔐 Login attempt with:', data.email)
+    
     try {
-      const user = sampleUsers.find(
-        (u) => u.email === data.email && u.password === data.password
-      )
-      if (user) {
-        console.log('Login successful, navigating to /')
-        toast({
-          title: 'Login Successful',
-          description: `Welcome, ${user.role}!`,
-        })
-        setTimeout(() => navigate('/'), 1000)
-      } else {
-        throw new Error('Invalid credentials')
-      }
-    } catch (error) {
-      console.error('Login failed:', error)
+      // Call real backend API
+      const response = await loginWithEmail({
+        email: data.email,
+        password: data.password
+      })
+      
+      console.log('✅ Login successful:', response)
+      
+      toast({
+        title: 'Login Successful',
+        description: 'Welcome back!',
+      })
+
+      // Wait a bit for cookies to be set, then check auth and navigate
+      setTimeout(async () => {
+        await checkAuth()
+        navigate('/')
+      }, 500)
+
+    } catch (error: any) {
+      console.error('❌ Login failed:', error)
+      const errorMessage = handleAuthError(error)
+      
       toast({
         title: 'Login Failed',
-        description: 'Invalid email or password',
+        description: errorMessage,
         variant: 'destructive',
       })
     } finally {

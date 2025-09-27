@@ -1,5 +1,5 @@
 import { Card } from '@/components/ui/card'
-import { UserAuthForm } from './components/user-auth-form'
+import { GoogleAuthForm } from './components/google-auth-form'
 
 export default function SignIn2() {
   return (
@@ -19,31 +19,31 @@ export default function SignIn2() {
             >
               <path d='M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3' />
             </svg>
-            <h1 className='text-xl font-medium'>Shadcn Admin</h1>
+            <h1 className='text-xl font-medium'>Admin Dashboard</h1>
           </div>
           <Card className='p-6'>
-            <div className='flex flex-col space-y-2 text-left'>
-              <h1 className='text-2xl font-semibold tracking-tight'>Login</h1>
+            <div className='flex flex-col space-y-2 text-center'>
+              <h1 className='text-2xl font-semibold tracking-tight'>Đăng nhập</h1>
               <p className='text-sm text-muted-foreground'>
-                Enter your email and password below <br />
-                to log into your account
+                Sử dụng tài khoản Google của bạn để truy cập <br />
+                vào hệ thống quản lý
               </p>
             </div>
-            <UserAuthForm />
+            <GoogleAuthForm />
             <p className='mt-4 px-8 text-center text-sm text-muted-foreground'>
-              By clicking login, you agree to our{' '}
+              Bằng cách đăng nhập, bạn đồng ý với{' '}
               <a
                 href='/terms'
                 className='underline underline-offset-4 hover:text-primary'
               >
-                Terms of Service
+                Điều khoản sử dụng
               </a>{' '}
-              and{' '}
+              và{' '}
               <a
                 href='/privacy'
                 className='underline underline-offset-4 hover:text-primary'
               >
-                Privacy Policy
+                Chính sách bảo mật
               </a>
               .
             </p>

@@ -56,7 +56,7 @@ export default function CustomerReviews() {
   const handleReplySubmit = () => {
     if (selectedReview) {
       // In a real application, you would send this reply to the backend
-      console.log(`Reply to review ${selectedReview.id}: ${replyText}`)
+      // Reply to review functionality
       setIsReplyDialogOpen(false)
       setReplyText('')
       setSelectedReview(null)

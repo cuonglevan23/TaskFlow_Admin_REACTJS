@@ -1,48 +1,49 @@
 import { useUsers } from '../context/users-context'
-import { UsersActionDialog } from './users-action-dialog'
-import { UsersDeleteDialog } from './users-delete-dialog'
-import { UsersInviteDialog } from './users-invite-dialog'
+import { UsersEditDialog } from './users-edit-dialog'
+import { UsersStatusDialog } from './users-status-dialog'
+import { UsersRoleDialog } from './users-role-dialog'
+import { UsersViewDialog } from './users-view-dialog'
 
 export function UsersDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useUsers()
+
+  const handleCloseDialog = () => {
+    setOpen(null)
+    setTimeout(() => {
+      setCurrentRow(null)
+    }, 500)
+  }
+
   return (
     <>
-      <UsersActionDialog
-        key='user-add'
-        open={open === 'add'}
-        onOpenChange={() => setOpen('add')}
-      />
-
-      <UsersInviteDialog
-        key='user-invite'
-        open={open === 'invite'}
-        onOpenChange={() => setOpen('invite')}
-      />
-
       {currentRow && (
         <>
-          <UsersActionDialog
-            key={`user-edit-${currentRow.id}`}
-            open={open === 'edit'}
-            onOpenChange={() => {
-              setOpen('edit')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
+          <UsersViewDialog
+            key={`user-view-${currentRow.id}`}
+            open={open === 'view'}
+            onOpenChange={handleCloseDialog}
+            user={currentRow}
           />
 
-          <UsersDeleteDialog
-            key={`user-delete-${currentRow.id}`}
-            open={open === 'delete'}
-            onOpenChange={() => {
-              setOpen('delete')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
-            }}
-            currentRow={currentRow}
+          <UsersEditDialog
+            key={`user-edit-${currentRow.id}`}
+            open={open === 'edit'}
+            onOpenChange={handleCloseDialog}
+            user={currentRow}
+          />
+
+          <UsersStatusDialog
+            key={`user-status-${currentRow.id}`}
+            open={open === 'status'}
+            onOpenChange={handleCloseDialog}
+            user={currentRow}
+          />
+
+          <UsersRoleDialog
+            key={`user-role-${currentRow.id}`}
+            open={open === 'role'}
+            onOpenChange={handleCloseDialog}
+            user={currentRow}
           />
         </>
       )}
