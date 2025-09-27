@@ -93,8 +93,8 @@ export const columns: ColumnDef<AdminUserResponseDto>[] = [
 			return (
 				<Badge variant='outline' className={getUserStatusColor(status)}>
 					{status === 'ACTIVE' ? 'Active' :
-					 status === 'INACTIVE' ? 'Inactive' :
-					 'Suspended'}
+					status === 'INACTIVE' ? 'Inactive' :
+					'Suspended'}
 				</Badge>
 			)
 		},

@@ -8,7 +8,7 @@ on:
     branches: [ main ]
 
 env:
-  DOCKER_IMAGE: your-dockerhub-username/shadcn-admin-dashboard
+  DOCKER_IMAGE: levancuong23/taskflow_admin
   NODE_VERSION: '18'
 
 jobs:
@@ -30,8 +30,8 @@ jobs:
       - name: Run linting
         run: npm run lint
 
-      - name: Run type checking
-        run: npm run build
+      - name: Build application (test)
+        run: npm run build:docker
 
   build-and-push:
     needs: test
@@ -80,7 +80,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ env.DOCKER_IMAGE }}
-          readme-filepath: ./README.md
+          readme-filepath: ./DOCKER.md
 
   security-scan:
     needs: build-and-push
