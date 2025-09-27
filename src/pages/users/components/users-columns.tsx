@@ -11,17 +11,26 @@ import LongText from '@/components/long-text'
 export const columns: ColumnDef<AdminUserResponseDto>[] = [
 	{
 		id: 'select',
-		header: ({ table }) => (
-			<Checkbox
-				checked={
-					table.getIsAllPageRowsSelected() ||
-					(table.getIsSomePageRowsSelected() && 'indeterminate')
-				}
-				onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-				aria-label='Select all'
-				className='translate-y-[2px]'
-			/>
-		),
+		header: ({ table }) => {
+			const isAllSelected = table.getIsAllPageRowsSelected()
+			const isSomeSelected = table.getIsSomePageRowsSelected()
+
+			let checkedState: boolean | "indeterminate" = false
+			if (isAllSelected) {
+				checkedState = true
+			} else if (isSomeSelected) {
+				checkedState = "indeterminate"
+			}
+
+			return (
+				<Checkbox
+					checked={checkedState}
+					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+					aria-label='Select all'
+					className='translate-y-[2px]'
+				/>
+			)
+		},
 		meta: {
 			className: cn(
 				'sticky md:table-cell left-0 z-10 rounded-tl',

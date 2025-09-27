@@ -51,17 +51,16 @@ type ButtonProps = ButtonPropsBase &
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, children, ...props }, ref) => {
-    const { asChild, ...rest } = props
+    const { asChild, ...otherProps } = props
     if (asChild) {
-      return (
-        <Slot
-          className={cn(buttonVariants({ variant, size, className }))}
-          ref={ref}
-          {...rest}
-        >
-          {children}
-        </Slot>
-      )
+      return <Slot className={cn(buttonVariants({ variant, size }), className)} {...otherProps} />
+    }
+
+    // Handle properties safely for non-asChild case
+    const buttonProps = otherProps as ButtonPropsBase & {
+      loading?: boolean
+      leftSection?: JSX.Element
+      rightSection?: JSX.Element
     }
 
     const {
@@ -69,15 +68,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       leftSection,
       rightSection,
       disabled,
-      ...otherProps
-    } = props
+      ...restProps
+    } = buttonProps
 
     return (
       <button
         className={cn(buttonVariants({ variant, size, className }))}
         disabled={loading || disabled}
         ref={ref}
-        {...otherProps}
+        {...restProps}
       >
         {((leftSection && loading) ||
           (!leftSection && !rightSection && loading)) && (
