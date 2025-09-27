@@ -1,15 +1,9 @@
 // API functions for audit logs management - Updated to match backend endpoints
 import api from './axios.customize';
-import type { 
+import {
   AuditLogResponseDto,
-  AuditLogQueryParams,
-  PaginatedAuditLogsResponse,
-  SuspiciousActivitiesResponse,
-  AuditStatisticsResponse,
-  RecentActivitiesResponse,
-  ExportAuditLogsRequest,
-  ExportAuditLogsResponse
-} from '../types/audit.types';
+  AuditLogQueryParams
+} from '@/types/audit.types';
 
 // Get all audit logs with pagination and filtering
 export const getAuditLogs = async (params?: AuditLogQueryParams): Promise<any> => {
@@ -69,7 +63,7 @@ export const getAuditStatistics = async (days: number = 30): Promise<any> => {
 };
 
 // Get recent activities
-export const getRecentActivities = async (limit: number = 10): Promise<RecentActivitiesResponse> => {
+export const getRecentActivities = async (limit: number = 10): Promise<any> => {
   const queryParams = new URLSearchParams();
   queryParams.append('limit', limit.toString());
   
@@ -77,7 +71,7 @@ export const getRecentActivities = async (limit: number = 10): Promise<RecentAct
 };
 
 // Export audit logs
-export const exportAuditLogs = async (request: ExportAuditLogsRequest): Promise<ExportAuditLogsResponse> => {
+export const exportAuditLogs = async (request: any): Promise<any> => {
   return api.post('/admin/audit-logs/export', request);
 };
 

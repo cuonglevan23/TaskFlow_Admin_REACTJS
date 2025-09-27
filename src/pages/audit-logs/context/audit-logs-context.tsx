@@ -1,10 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import {
   AuditLogResponseDto,
-  AuditLogQueryParams,
-  PaginatedAuditLogsResponse,
-  SuspiciousActivitiesResponse,
-  AuditStatisticsResponse
+  AuditLogQueryParams
 } from '@/types/audit.types'
 import { 
   getAuditLogs,
@@ -128,8 +125,8 @@ export const AuditLogsProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setLoading(true)
       setError(null)
       
-      const response: PaginatedAuditLogsResponse = await getAuditLogs(queryParams || filters)
-      
+      const response = await getAuditLogs(queryParams || filters)
+
       if (!response) {
         console.error('❌ [AuditLogsContext] Response is null/undefined')
         setError('No data received from server')

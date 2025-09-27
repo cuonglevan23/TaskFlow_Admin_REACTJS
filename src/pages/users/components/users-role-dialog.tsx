@@ -40,20 +40,20 @@ export function UsersRoleDialog({ open, onOpenChange, user }: UsersRoleDialogPro
   const { refreshUsers } = useUsers()
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
-  const [selectedRoles, setSelectedRoles] = useState<UserRole[]>(user.roles || [])
+  const [selectedRoles, setSelectedRoles] = useState<UserRole[]>((user.roles as any) || [])
 
   const handleRoleChange = (role: UserRole, checked: boolean) => {
     if (checked) {
-      setSelectedRoles(prev => [...prev.filter(r => r !== role), role])
+      setSelectedRoles(prev => [...prev.filter(r => r !== (role as any)), role])
     } else {
-      setSelectedRoles(prev => prev.filter(r => r !== role))
+      setSelectedRoles(prev => prev.filter(r => r !== (role as any)))
     }
   }
 
   const getRoleChanges = () => {
-    const currentRoles = user.roles || []
-    const rolesToAdd = selectedRoles.filter(role => !currentRoles.includes(role))
-    const rolesToRemove = currentRoles.filter(role => !selectedRoles.includes(role))
+    const currentRoles = (user.roles as any) || []
+    const rolesToAdd = selectedRoles.filter(role => !currentRoles.includes(role as any))
+    const rolesToRemove = currentRoles.filter((role: any) => !selectedRoles.includes(role as any))
 
     return { rolesToAdd, rolesToRemove }
   }
@@ -124,11 +124,11 @@ export function UsersRoleDialog({ open, onOpenChange, user }: UsersRoleDialogPro
               <Label className="text-base font-medium">Quyền hiện tại</Label>
               <div className="flex flex-wrap gap-2 mt-2">
                 {user.roles && user.roles.length > 0 ? (
-                  user.roles.map((role) => {
+                  (user.roles as any).map((role: any) => {
                     const roleOption = ROLE_OPTIONS.find(r => r.value === role)
                     return (
-                      <Badge key={role} className={roleOption?.color}>
-                        {roleOption?.label || role}
+                      <Badge key={String(role)} className={roleOption?.color}>
+                        {roleOption?.label || String(role)}
                       </Badge>
                     )
                   })
@@ -185,7 +185,7 @@ export function UsersRoleDialog({ open, onOpenChange, user }: UsersRoleDialogPro
                       }
 
                       if (rolesToRemove.length > 0) {
-                        changes.push(`Xóa: ${rolesToRemove.map(r => 
+                        changes.push(`Xóa: ${rolesToRemove.map((r: any) => 
                           ROLE_OPTIONS.find(o => o.value === r)?.label || r
                         ).join(', ')}`)
                       }

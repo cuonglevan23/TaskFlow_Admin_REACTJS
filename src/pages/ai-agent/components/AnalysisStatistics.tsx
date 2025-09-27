@@ -3,17 +3,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/custom/button';
 import { BarChart3, RefreshCw } from 'lucide-react';
 
-// Define a proper mock type for AnalysisStatistics
-interface MockAnalysisStatistics {
-  totalAnalyzed: number;
-  averageConfidence: number;
-  categoryBreakdown: Record<string, number>;
-  timeRangeStats: {
-    startDate: string;
-    endDate: string;
-    analyzedPerDay: Array<{ date: string; count: number }>;
-  };
-}
 
 export function AnalysisStatisticsView() {
   const [loading, setLoading] = useState(true);

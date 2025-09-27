@@ -177,7 +177,7 @@ export const getConversations = async (
     // Check if it's a paginated response object
     if (data && typeof data === 'object' && 'conversations' in data) {
       console.log('📄 Detected paginated response format');
-      return data as ConversationsResponse;
+      return data as any;
     }
 
     // Fallback: return empty response
@@ -640,8 +640,8 @@ export const getConversationMessages = async (conversationId: string): Promise<C
           userEmail: msg.userEmail || '',
           message: msg.content || '',
           response: msg.senderType === 'AGENT' ? msg.content : '',
-          messageType: msg.senderType === 'USER' ? 'USER' :
-                      msg.senderType === 'SUPERVISOR' ? 'ADMIN' : 'AI',
+          messageType: (msg.senderType === 'USER' ? 'USER' :
+                       msg.senderType === 'SUPERVISOR' ? 'ADMIN' : 'AI') as 'USER' | 'ADMIN' | 'AI',
           isAdminTakeover: msg.senderType === 'SUPERVISOR',
           adminId: msg.supervisorId ? parseInt(msg.supervisorId) : undefined,
           adminName: msg.supervisorName || '',

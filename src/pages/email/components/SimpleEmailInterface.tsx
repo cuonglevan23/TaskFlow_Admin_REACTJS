@@ -244,7 +244,7 @@ const SimpleEmailInterface: React.FC = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2">
                         <span className={`font-medium ${!email.isRead ? 'font-bold' : ''} text-foreground`}>
-                          {email.fromName || email.fromEmail || 'Unknown Sender'}
+                          {(email as any).fromName || (email as any).fromEmail || 'Unknown Sender'}
                         </span>
                         {email.isStarred && (
                           <Star className="w-4 h-4 text-yellow-400 fill-current" />

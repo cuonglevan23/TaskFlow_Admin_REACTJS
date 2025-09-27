@@ -4,13 +4,6 @@ import {
   getPaymentDashboard
 } from '@/api/analyticsApi'
 import { getUsers } from '@/api/userApi'
-import {
-  UserAnalyticsResponseDto
-} from '@/types/analytics.types'
-import {
-  PaymentDashboardResponse
-} from '@/types/payment.types'
-import { UsersPageResponse } from '@/types/user.types'
 
 interface DashboardStats {
   totalRevenue: number
@@ -80,7 +73,7 @@ export function DashboardProvider({ children }: DashboardProviderProps) {
       // Fetch data from multiple APIs with error handling
       const [paymentData, userAnalytics] = await Promise.allSettled([
         getPaymentDashboard(),
-        getUserAnalytics({ period: 'LAST_30_DAYS' })
+        getUserAnalytics({ period: 'LAST_30_DAYS' as any })
       ])
 
       const payment = paymentData.status === 'fulfilled' ? paymentData.value : null
@@ -116,7 +109,7 @@ export function DashboardProvider({ children }: DashboardProviderProps) {
       // Fetch real data from APIs
       const [paymentData, userAnalytics] = await Promise.allSettled([
         getPaymentDashboard(),
-        getUserAnalytics({ period: 'LAST_30_DAYS' })
+        getUserAnalytics({ period: 'LAST_30_DAYS' as any })
       ])
 
       const payment = paymentData.status === 'fulfilled' ? paymentData.value : null
@@ -175,7 +168,7 @@ export function DashboardProvider({ children }: DashboardProviderProps) {
         page: 0,
         size: 5,
         sortBy: 'createdAt',
-        sortDir: 'DESC'
+        sortDir: 'desc'
       })
 
       const recentSalesData: RecentSale[] = usersResponse.content.map((user: any) => ({

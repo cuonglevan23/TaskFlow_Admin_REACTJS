@@ -96,7 +96,7 @@ export function ConversationDetail({ conversation, onBack }: ConversationDetailP
           }
         } catch (error: any) {
           // Step 2: GET returned 404 or failed - call PUT to create new analysis
-          if (error.response?.status === 404 || !existingAnalysis) {
+          if (error.response?.status === 404) {
             console.log('📝 GET returned 404 - calling PUT to create new analysis with Gemini');
             const newAnalysis = await createConversationAnalysis(conversation.conversationId, {
               userId: conversation.userId,
