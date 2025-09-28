@@ -19,13 +19,14 @@ export default function AuthSuccess() {
       setHasProcessed(true)
       
       try {
-        // Wait a bit for cookies to be properly set by browser
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        
-        // Try checkAuth multiple times in case of timing issues
+        // Wait longer for cookies to be properly set by browser
+        console.log('⏳ Waiting for cookies to be set...')
+        await new Promise(resolve => setTimeout(resolve, 3000))
+
+        // Try checkAuth multiple times with exponential backoff
         let authSuccess = false
         let attempts = 0
-        const maxAttempts = 5
+        const maxAttempts = 8
 
         while (!authSuccess && attempts < maxAttempts) {
           attempts++
@@ -35,11 +36,14 @@ export default function AuthSuccess() {
             await checkAuth()
             authSuccess = true
             console.log('✅ Authentication check successful')
-          } catch (error) {
-            console.log(`❌ Auth check attempt ${attempts} failed:`, error)
+          } catch (error: any) {
+            console.log(`❌ Auth check attempt ${attempts} failed:`, error?.message || error)
+
             if (attempts < maxAttempts) {
-              // Wait before retry
-              await new Promise(resolve => setTimeout(resolve, 1000))
+              // Exponential backoff: 1s, 2s, 3s, 4s, 5s, 6s, 7s
+              const waitTime = attempts * 1000
+              console.log(`⏳ Waiting ${waitTime}ms before retry...`)
+              await new Promise(resolve => setTimeout(resolve, waitTime))
             }
           }
         }
@@ -64,24 +68,26 @@ export default function AuthSuccess() {
           
           if (countdownValue <= 0) {
             clearInterval(countdownInterval)
+            console.log('🔄 Redirecting to dashboard...')
             navigate('/dashboard', { replace: true })
           }
         }, 1000)
 
-      } catch (error) {
-        console.error('❌ OAuth success handling failed:', error)
+      } catch (error: any) {
+        console.error('❌ OAuth success handling failed:', error?.message || error)
         setAuthStatus('error')
 
         toast({
           title: 'Có lỗi xảy ra',
-          description: 'Không thể xác thực người dùng. Đang chuyển về trang đăng nhập.',
+          description: 'Không thể xác thực người dùng. Vui lòng thử đăng nhập lại.',
           variant: 'destructive',
         })
 
         // Redirect to login on error after delay
         setTimeout(() => {
+          console.log('🔄 Redirecting to login due to error...')
           navigate('/login', { replace: true })
-        }, 3000)
+        }, 5000)
       }
     }
 
@@ -95,7 +101,7 @@ export default function AuthSuccess() {
       case 'success':
         return `Đăng nhập thành công! Chuyển hướng trong ${countdown} giây...`
       case 'error':
-        return 'Có lỗi xảy ra. Đang chuyển về trang đăng nhập...'
+        return 'Có lỗi xảy ra. Đang chuyển về trang đăng nhập trong 5 giây...'
     }
   }
 
