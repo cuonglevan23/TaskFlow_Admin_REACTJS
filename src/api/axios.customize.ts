@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance, type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
 
 // Base URL config - sử dụng VITE_BACKEND_URL từ env
-const BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://3-107-36-172.nip.io/";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
 // Flags để tránh multiple refresh attempts
 let isRefreshing = false;
@@ -75,27 +75,38 @@ axiosInstance.interceptors.response.use(
             isRefreshing = true;
 
             try {
+              console.log('🔄 Attempting token refresh...');
               await axiosInstance.post('/auth/refresh');
+              console.log('✅ Token refresh successful');
               processQueue(null);
               isRefreshing = false;
+
+              // Retry original request after successful refresh
               return axiosInstance(originalRequest);
             } catch (refreshError) {
               // Refresh failed
+              console.log('❌ Token refresh failed:', refreshError);
               processQueue(refreshError);
               isRefreshing = false;
               
-              // Chỉ redirect nếu đã thử refresh và thất bại
-              console.log('🔄 Refresh token expired, redirecting to login');
-              if (typeof window !== 'undefined') {
-                // Delay một chút để tránh multiple redirects
-                setTimeout(() => {
-                  window.location.href = '/login';
-                }, 1000);
+              // Only redirect if we're not on auth pages and this isn't a checkAuth request
+              const isAuthPage = window.location.pathname.includes('/auth') || window.location.pathname === '/login';
+              const isCheckAuthRequest = originalRequest.url?.includes('/user-profiles/me');
+
+              if (!isAuthPage && !isCheckAuthRequest) {
+                console.log('🔄 Refresh token expired, redirecting to login');
+                if (typeof window !== 'undefined') {
+                  // Delay to avoid multiple redirects
+                  setTimeout(() => {
+                    window.location.href = '/login';
+                  }, 1000);
+                }
               }
+
               return Promise.reject(new Error('Session expired. Please login again.'));
             }
           }
-          // Nếu đã retry rồi mà vẫn 401, có nghĩa là thực sự hết session
+          // If already retried and still 401, reject without redirect for auth checks
           return Promise.reject(new Error('Authentication required'));
 
         case 400:
