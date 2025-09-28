@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance, type AxiosError, type AxiosResponse, type InternalAxiosRequestConfig } from "axios";
 
 // Base URL config - sử dụng VITE_BACKEND_URL từ env
-const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "https://3-107-36-172.nip.io/";
 
 // Flags để tránh multiple refresh attempts
 let isRefreshing = false;
