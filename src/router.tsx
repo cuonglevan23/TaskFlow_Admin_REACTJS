@@ -26,18 +26,12 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Auth success page (sau khi Google OAuth thành công)
+  // Auth success page (sau khi Google OAuth thành công) - NO AUTH GUARD
   {
     path: '/auth/success',
-    element: <RedirectIfAuthenticated />, // Đảm bảo có auth context
-    children: [
-      {
-        index: true,
-        lazy: async () => ({
-          Component: (await import('./pages/auth/success')).default,
-        }),
-      },
-    ],
+    lazy: async () => ({
+      Component: (await import('./pages/auth/success')).default,
+    }),
   },
 
   // Protected admin routes (cần authentication)
